@@ -8,13 +8,13 @@
 | 制約 | Go 言語、Kong CLI フレームワーク、crypto/rand、configファイルなし（環境変数のみ） |
 | 対象リポジトリ | /Users/youyo/src/github.com/youyo/passgen |
 | 作成日 | 2026-04-02 |
-| 最終更新 | 2026-04-02 16:50 |
-| ステータス | 未着手 |
+| 最終更新 | 2026-04-03 10:00 |
+| ステータス | 完了 |
 
 ## Current Focus
-- **マイルストーン**: M01 プロジェクト初期化
-- **直近の完了**: ロードマップ作成
-- **次のアクション**: M01 の実装を `/devflow:implement` で開始
+- **マイルストーン**: 全14マイルストーン完了
+- **直近の完了**: M14 README・ドキュメント
+- **次のアクション**: GitHub リポジトリへ push → タグ付け → リリース
 
 ## Architecture Decisions
 | # | 決定 | 理由 | 日付 |
@@ -45,67 +45,67 @@ passgen/
 ## Progress
 
 ### M01: プロジェクト初期化
-- [ ] go mod init
-- [ ] main.go（最小限の func main）
-- [ ] .gitignore
-- [ ] Makefile（build, test, lint）
-- [ ] ビルド・テスト実行確認
+- [x] go mod init
+- [x] main.go（最小限の func main）
+- [x] .gitignore
+- [x] Makefile（build, test, lint）
+- [x] ビルド・テスト実行確認
 - 📄 詳細: plans/passgen-m01-project-init.md
 
 ### M02: 文字セット定義
-- [ ] 4 カテゴリの文字列定数（曖昧文字除外）
-- [ ] All() / Exclude() / Categories() 関数
-- [ ] TDD テスト（曖昧文字不在、文字数検証）
-- 📄 詳細: 着手時に生成
+- [x] 4 カテゴリの文字列定数（曖昧文字除外）
+- [x] All() / Exclude() / Categories() 関数
+- [x] TDD テスト（曖昧文字不在、文字数検証）
+- 📄 詳細: plans/passgen-m02-charset.md
 
 ### M03: パスワード生成コアロジック
-- [ ] Config 構造体
-- [ ] Generate() 関数（crypto/rand）
-- [ ] 各カテゴリ最低保証 + シャッフル
-- [ ] TDD テスト（統計的検証含む）
-- 📄 詳細: 着手時に生成
+- [x] Config 構造体
+- [x] Generate() 関数（crypto/rand）
+- [x] 各カテゴリ最低保証 + シャッフル
+- [x] TDD テスト（統計的検証含む）
+- 📄 詳細: plans/passgen-m03-generator.md
 
 ### M04: CLI 基盤（Kong + length 引数）
-- [ ] Kong CLI 構造体定義
-- [ ] `passgen [length]` の位置引数パース
-- [ ] generator.Generate() 呼び出し → stdout 出力
-- [ ] main.go を kong.Parse → Run に変更
-- 📄 詳細: 着手時に生成
+- [x] Kong CLI 構造体定義
+- [x] `passgen [length]` の位置引数パース
+- [x] generator.Generate() 呼び出し → stdout 出力
+- [x] main.go を kong.Parse → Run に変更
+- 📄 詳細: plans/passgen-m04-cli-base.md
 
 ### M05: カテゴリフラグ（--symbols, --digits, --upper, --lower）
-- [ ] Kong 構造体にフラグ追加（各 default:"1"）
-- [ ] フラグ値を generator.Config に渡す
-- [ ] 負の値バリデーション
-- [ ] TDD テスト
-- 📄 詳細: 着手時に生成
+- [x] Kong 構造体にフラグ追加（各 default:"1"）
+- [x] フラグ値を generator.Config に渡す
+- [x] 負の値バリデーション
+- [x] TDD テスト
+- 📄 詳細: plans/passgen-m05-category-flags.md
 
 ### M06: --exclude フラグ
-- [ ] --exclude string フラグ追加
-- [ ] charset.Exclude() 適用
-- [ ] 除外後の空集合エラー
-- [ ] TDD テスト
-- 📄 詳細: 着手時に生成
+- [x] --exclude string フラグ追加
+- [x] charset.Exclude() 適用
+- [x] 除外後の空集合エラー
+- [x] TDD テスト
+- 📄 詳細: plans/passgen-m06-exclude.md
 
 ### M07: --no-copy / --no-print フラグ
-- [ ] --no-copy, --no-print フラグ追加
-- [ ] 同時指定禁止バリデーション（Validate() メソッド）
-- [ ] --no-print 時の stdout 抑制
-- [ ] TDD テスト
-- 📄 詳細: 着手時に生成
+- [x] --no-copy, --no-print フラグ追加
+- [x] 同時指定禁止バリデーション（Validate() メソッド）
+- [x] --no-print 時の stdout 抑制
+- [x] TDD テスト
+- 📄 詳細: plans/passgen-m07-output-flags.md
 
 ### M08: クリップボード連携
-- [ ] Copier インターフェース定義
-- [ ] PbcopyCopier 実装（exec.Command）
-- [ ] --no-copy 時のスキップ
-- [ ] pbcopy 不在時の警告（エラーではない）
-- [ ] TDD テスト（モック経由）
-- 📄 詳細: 着手時に生成
+- [x] Copier インターフェース定義
+- [x] PbcopyCopier 実装（exec.Command）
+- [x] --no-copy 時のスキップ
+- [x] pbcopy 不在時の警告（エラーではない）
+- [x] TDD テスト（モック経由）
+- 📄 詳細: plans/passgen-m08-clipboard.md
 
 ### M09: エラーハンドリング統合
-- [ ] 全エラー条件の統合テスト
-- [ ] エラーメッセージフォーマット統一
-- [ ] exit code 検証（正常: 0, エラー: 1）
-- 📄 詳細: 着手時に生成
+- [x] 全エラー条件の統合テスト
+- [x] エラーメッセージフォーマット統一
+- [x] exit code 検証（正常: 0, エラー: 1）
+- 📄 詳細: plans/passgen-m09-error-handling.md
 
 ### M10: シェル補完（zsh 独自実装）
 - [x] `passgen completion zsh` サブコマンド
@@ -115,30 +115,30 @@ passgen/
 - 📄 詳細: plans/passgen-m10-completion.md
 
 ### M11: goreleaser 設定
-- [ ] .goreleaser.yaml 作成
-- [ ] ldflags バージョン埋め込み
-- [ ] goreleaser check 検証
-- [ ] スナップショットビルド確認
-- 📄 詳細: 着手時に生成
+- [x] .goreleaser.yaml 作成
+- [x] ldflags バージョン埋め込み
+- [x] goreleaser check 検証
+- [x] スナップショットビルド確認
+- 📄 詳細: plans/passgen-m11-goreleaser.md
 
 ### M12: CI/CD（GitHub Actions）
-- [ ] ci.yaml（test + lint）
-- [ ] release.yaml（goreleaser + GitHub App token）
-- [ ] actionlint 検証
-- 📄 詳細: 着手時に生成
+- [x] ci.yaml（test + lint）
+- [x] release.yaml（goreleaser + GitHub App token）
+- [x] actionlint 検証（YAML 構文検証パス、actionlint バイナリはインストール不可のため YAML パーサーで代替）
+- 📄 詳細: plans/passgen-m12-cicd.md
 
 ### M13: Homebrew tap 設定
-- [ ] goreleaser brews セクション追加
-- [ ] tap リポジトリ設定
-- [ ] goreleaser check 検証
-- 📄 詳細: 着手時に生成
+- [x] goreleaser homebrew_casks セクション追加（brews は v2.10+ で非推奨）
+- [x] tap リポジトリ設定（youyo/homebrew-tap）
+- [x] goreleaser check 検証
+- 📄 詳細: plans/passgen-m13-homebrew.md
 
 ### M14: README・ドキュメント
-- [ ] プロジェクト概要
-- [ ] インストール方法（Homebrew, go install, GitHub Releases）
-- [ ] 使用例（基本、フラグ、環境変数）
-- [ ] zsh 補完設定方法
-- 📄 詳細: 着手時に生成
+- [x] プロジェクト概要
+- [x] インストール方法（Homebrew, go install, GitHub Releases）
+- [x] 使用例（基本、フラグ、環境変数）
+- [x] zsh 補完設定方法
+- 📄 詳細: plans/passgen-m14-readme.md
 
 ## Dependency Graph
 ```
@@ -163,3 +163,4 @@ M01 ──┬── M02 ── M03 ──┐
 | 日時 | 種別 | 内容 |
 |------|------|------|
 | 2026-04-02 16:50 | 作成 | ロードマップ初版作成。Kong 採用、14 マイルストーン、TDD 必須 |
+| 2026-04-03 10:00 | 完了 | 全14マイルストーン完了。devflow:cycle で自律実行 |
