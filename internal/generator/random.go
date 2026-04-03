@@ -18,9 +18,9 @@ func secureRandomIndex(max int) (int, error) {
 	// rejection sampling でモジュラスバイアスを回避
 	// threshold は max の倍数で 256 以下の最大値
 	threshold := 256 - (256 % max)
-	buf := make([]byte, 1)
+	var buf [1]byte
 	for {
-		if _, err := rand.Read(buf); err != nil {
+		if _, err := rand.Read(buf[:]); err != nil {
 			return 0, err
 		}
 		r := int(buf[0])
