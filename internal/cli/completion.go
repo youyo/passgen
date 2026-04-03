@@ -54,8 +54,6 @@ _passgen() {
         "${flags[@]}" \
         '1::length:'
 }
-
-_passgen "$@"
 `
 
 const zshCompletionShort = `_passgen() { local -a flags; flags=('(-s --symbols)'{-s,--symbols}'[記号の最低文字数]:number:' '(-d --digits)'{-d,--digits}'[数字の最低文字数]:number:' '(-u --upper)'{-u,--upper}'[大文字の最低文字数]:number:' '(-l --lower)'{-l,--lower}'[小文字の最低文字数]:number:' '(-e --exclude)'{-e,--exclude}'[除外する文字]:string:' '--no-copy[クリップボードへのコピーを無効化]' '--no-print[stdout への出力を無効化]' '--help[ヘルプを表示する]'); _arguments -s "${flags[@]}" '1::length:'; }; compdef _passgen passgen
