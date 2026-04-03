@@ -23,15 +23,32 @@ builds:
 
 archives:
   - id: passgen
-    builds:
+    ids:
       - passgen
+    formats:
+      - tar.gz
     format_overrides:
       - goos: darwin
-        format: zip
+        formats:
+          - zip
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
   name_template: "checksums.txt"
+
+homebrew_casks:
+  - ids:
+      - passgen
+    binaries:
+      - passgen
+    repository:
+      owner: youyo
+      name: homebrew-tap
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    directory: Casks
+    homepage: "https://github.com/youyo/passgen"
+    description: "Simple and secure password generator CLI tool"
+    license: "MIT"
 
 changelog:
   sort: asc
