@@ -115,10 +115,10 @@ All character sets exclude ambiguous characters to avoid confusion when reading 
 Add the following to your `.zshrc`:
 
 ```bash
-eval "$(passgen completion zsh --short)"
+eval "$(passgen completion zsh)"
 ```
 
-Or generate the full completion script:
+Or save the completion script to a file:
 
 ```bash
 passgen completion zsh > /usr/local/share/zsh/site-functions/_passgen

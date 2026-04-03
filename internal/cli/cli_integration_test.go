@@ -242,15 +242,12 @@ func TestIntegration_CompletionZsh_ContainsAllFlags(t *testing.T) {
 	}
 }
 
-func TestIntegration_CompletionZshShort_ExitCode0(t *testing.T) {
-	stdout, stderr, exitCode := runPassgen(t, "completion", "zsh", "--short")
+func TestIntegration_CompletionZsh_ContainsCompdef(t *testing.T) {
+	stdout, _, exitCode := runPassgen(t, "completion", "zsh")
 	if exitCode != 0 {
-		t.Errorf("exit code = %d, want 0; stderr: %s", exitCode, stderr)
+		t.Fatalf("exit code = %d, want 0", exitCode)
 	}
-	if strings.Contains(stdout, "#compdef passgen") {
-		t.Error("--short output should not contain '#compdef passgen'")
-	}
-	if !strings.Contains(stdout, "compdef") {
-		t.Error("--short output should contain 'compdef' function call")
+	if !strings.Contains(stdout, "compdef _passgen passgen") {
+		t.Error("output should contain 'compdef _passgen passgen' for eval usage")
 	}
 }
