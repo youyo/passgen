@@ -36,19 +36,19 @@ archives:
 checksum:
   name_template: "checksums.txt"
 
-homebrew_casks:
+brews:
   - ids:
-      - passgen
-    binaries:
       - passgen
     repository:
       owner: youyo
       name: homebrew-tap
       token: "{{ .Env.GITHUB_TOKEN }}"
-    directory: Casks
+    directory: Formula
     homepage: "https://github.com/youyo/passgen"
     description: "Simple and secure password generator CLI tool"
     license: "MIT"
+    install: |
+      bin.install "passgen"
 
 changelog:
   sort: asc
