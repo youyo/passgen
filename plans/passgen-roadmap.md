@@ -108,11 +108,11 @@ passgen/
 - 📄 詳細: 着手時に生成
 
 ### M10: シェル補完（zsh 独自実装）
-- [ ] `passgen completion zsh` サブコマンド
-- [ ] zsh completion スクリプト生成
-- [ ] --short フラグ（eval 用ワンライナー）
-- [ ] TDD テスト
-- 📄 詳細: 着手時に生成
+- [x] `passgen completion zsh` サブコマンド
+- [x] zsh completion スクリプト生成
+- [x] --short フラグ（eval 用ワンライナー）
+- [x] TDD テスト
+- 📄 詳細: plans/passgen-m10-completion.md
 
 ### M11: goreleaser 設定
 - [ ] .goreleaser.yaml 作成

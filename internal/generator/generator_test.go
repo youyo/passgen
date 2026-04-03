@@ -257,6 +257,140 @@ func TestDefaultConfig_Values(t *testing.T) {
 	}
 }
 
+// Round 7: Exclude テスト
+
+func TestGenerate_Exclude_abc_NoAbcInPassword(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = "abc"
+	for i := 0; i < 100; i++ {
+		pw, err := Generate(cfg)
+		if err != nil {
+			t.Fatalf("iteration %d: unexpected error: %v", i, err)
+		}
+		for _, ch := range "abc" {
+			if strings.ContainsRune(pw, ch) {
+				t.Errorf("iteration %d: excluded char %q found in %q", i, ch, pw)
+			}
+		}
+	}
+}
+
+func TestGenerate_Exclude_AllLower_WithLower0_Success(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = charset.Lower
+	cfg.Lower = 0
+	pw, err := Generate(cfg)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(pw) != 20 {
+		t.Errorf("len(password) = %d, want 20", len(pw))
+	}
+	// パスワードに小文字が含まれないことを確認
+	for _, ch := range pw {
+		if strings.ContainsRune(charset.Lower, ch) {
+			t.Errorf("excluded lower char %q found in %q", ch, pw)
+		}
+	}
+}
+
+func TestGenerate_Exclude_AllLower_WithLower1_Error(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = charset.Lower
+	cfg.Lower = 1
+	_, err := Generate(cfg)
+	if err == nil {
+		t.Fatal("expected error when lower category is empty after exclusion, got nil")
+	}
+	if !errors.Is(err, ErrCategoryEmptyAfterExclude) {
+		t.Errorf("expected ErrCategoryEmptyAfterExclude, got %v", err)
+	}
+}
+
+func TestGenerate_Exclude_AllChars_AllMinZero_Error(t *testing.T) {
+	cfg := Config{
+		Length:  20,
+		Lower:   0,
+		Upper:   0,
+		Digits:  0,
+		Symbols: 0,
+		Exclude: charset.All(),
+	}
+	_, err := Generate(cfg)
+	if err == nil {
+		t.Fatal("expected error when all chars excluded, got nil")
+	}
+	if !errors.Is(err, ErrAllCharsExcluded) {
+		t.Errorf("expected ErrAllCharsExcluded, got %v", err)
+	}
+}
+
+func TestGenerate_Exclude_AllChars_WithMinimums_CategoryError(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = charset.All()
+	_, err := Generate(cfg)
+	if err == nil {
+		t.Fatal("expected error when all chars excluded with minimums, got nil")
+	}
+	if !errors.Is(err, ErrCategoryEmptyAfterExclude) {
+		t.Errorf("expected ErrCategoryEmptyAfterExclude, got %v", err)
+	}
+}
+
+func TestGenerate_Exclude_Empty_NoEffect(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = ""
+	pw, err := Generate(cfg)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(pw) != 20 {
+		t.Errorf("len(password) = %d, want 20", len(pw))
+	}
+}
+
+func TestGenerate_Exclude_AlreadyExcludedChars_NoError(t *testing.T) {
+	cfg := DefaultConfig()
+	cfg.Exclude = "lIO01" // 曖昧文字は既に除外済み
+	pw, err := Generate(cfg)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(pw) != 20 {
+		t.Errorf("len(password) = %d, want 20", len(pw))
+	}
+}
+
+func TestGenerate_Exclude_PartialLower_Success(t *testing.T) {
+	// lower の大部分を除外、vwxyz が残る
+	cfg := DefaultConfig()
+	cfg.Exclude = "abcdefghijkmnopqrstu"
+	cfg.Lower = 1
+	for i := 0; i < 50; i++ {
+		pw, err := Generate(cfg)
+		if err != nil {
+			t.Fatalf("iteration %d: unexpected error: %v", i, err)
+		}
+		// 除外文字が含まれないことを確認
+		for _, ch := range cfg.Exclude {
+			if strings.ContainsRune(pw, ch) {
+				t.Errorf("iteration %d: excluded char %q found in %q", i, ch, pw)
+			}
+		}
+		// v, w, x, y, z のいずれかが含まれることを確認（lower min=1）
+		hasLower := false
+		for _, ch := range pw {
+			if strings.ContainsRune("vwxyz", ch) {
+				hasLower = true
+				break
+			}
+		}
+		if !hasLower {
+			t.Errorf("iteration %d: no remaining lower char (vwxyz) found in %q", i, pw)
+		}
+	}
+}
+
 // ヘルパー関数
 
 func assertContainsCategory(t *testing.T, pw, category, name string) {
